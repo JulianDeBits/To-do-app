@@ -14,8 +14,11 @@ document.addEventListener("DOMContentLoaded", function() {
             let nuevaTarea = document.createElement("li");
             nuevaTarea.className = "list-group-item d-flex justify-content-between align-items-center";
             nuevaTarea.innerHTML = `
-                ${textoTarea}
-                <button class="btn btn-danger btn-sm eliminar-tarea">X</button>
+                <span class="texto-tarea">${textoTarea}</span>
+                <div>
+                    <button class="btn btn-warning btn-sm editar-tarea">Editar</button>
+                    <button class="btn btn-danger btn-sm eliminar-tarea">X</button>
+                </div>
             `;
 
             // Agregar la tarea a la lista
@@ -30,6 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
             nuevaTarea.querySelector(".eliminar-tarea").addEventListener("click", function() {
                 nuevaTarea.remove();
             });
+
+            nuevaTarea.querySelector(".editar-tarea").addEventListener("click", function() {
+                let nuevoTexto = prompt("Editar tarea:", nuevaTarea.querySelector(".texto-tarea").textContent);
+                if (nuevoTexto !== null && nuevoTexto.trim() !== "") {
+                    nuevaTarea.querySelector(".texto-tarea").textContent = nuevoTexto.trim();
+                }
+            });
+
         } else {
             alert("Complete los campos por favor")
         }
