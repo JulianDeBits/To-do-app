@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div>
                     <button class="btn btn-warning btn-sm editar-tarea">Editar</button>
                     <button class="btn btn-danger btn-sm eliminar-tarea">X</button>
+                    <select class="form-select mb-3">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="terminado">Terminado</option>
+                    </select>
                 </div>
             `;
 
