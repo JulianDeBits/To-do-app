@@ -1,64 +1,99 @@
-document.addEventListener("DOMContentLoaded", function() {
-    
+document.addEventListener("DOMContentLoaded", function () {
     // Capturar elementos del DOM
     const botonAgregar = document.getElementById("agregarButton");
     const inputTarea = document.getElementById("tareaTxt");
     const listaTareas = document.getElementById("listaTareas");
 
     // Función para agregar una nueva tarea
-    botonAgregar.addEventListener("click", function() {
+    botonAgregar.addEventListener("click", function () {
         let textoTarea = inputTarea.value.trim();
 
         if (textoTarea !== "") {
             // Crear un nuevo elemento de lista
             let nuevaTarea = document.createElement("li");
-            nuevaTarea.className = "list-group-item d-flex justify-content-between align-items-center";
-            nuevaTarea.innerHTML = `
-                <span class="texto-tarea">${textoTarea}</span>
-                <div>
-                    <button class="btn btn-warning btn-sm editar-tarea">Editar</button>
-                    <button class="btn btn-danger btn-sm eliminar-tarea">X</button>
-                    <select class="form-select mb-3">
-                        <option value="pendiente">Pendiente</option>
-                        <option value="terminado">Terminado</option>
-                    </select>
-                </div>
+            nuevaTarea.classList.add("list-group-item");
+
+            // Crear contenedor principal (fila flex)
+            let contenedorFila = document.createElement("div");
+            contenedorFila.classList.add("d-flex", "justify-content-between", "align-items-center", "flex-wrap");
+
+            // Crear contenedor izquierdo (texto)
+            let contenedorIzquierda = document.createElement("div");
+            contenedorIzquierda.classList.add("texto-tarea");
+            contenedorIzquierda.textContent = textoTarea;
+
+            // Crear contenedor derecho (select y botones)
+            let contenedorDerecha = document.createElement("div");
+            contenedorDerecha.classList.add("d-flex", "gap-2", "flex-wrap", "align-items-center");
+
+            // Crear el select para el estado
+            let selectEstado = document.createElement("select");
+            selectEstado.classList.add("form-select", "estado-tarea");
+            selectEstado.style.width = "150px";
+            selectEstado.innerHTML = `
+                <option value="pendiente">Pendiente</option>
+                <option value="terminado">Terminado</option>
             `;
+
+            selectEstado.addEventListener("change", function () {
+                if (selectEstado.value === "terminado") {
+                    selectEstado.disabled = true;
+                }
+            });
+
+            // Crear botón de editar
+            let btnEditar = document.createElement("button");
+            btnEditar.textContent = "Editar";
+            btnEditar.classList.add("btn", "btn-warning", "editar-tarea");
+
+            // Crear botón de eliminar
+            let btnEliminar = document.createElement("button");
+            btnEliminar.textContent = "Eliminar";
+            btnEliminar.classList.add("btn", "btn-danger", "eliminar-tarea");
+
+            // Agregar elementos al contenedor derecho
+            contenedorDerecha.appendChild(selectEstado);
+            contenedorDerecha.appendChild(btnEditar);
+            contenedorDerecha.appendChild(btnEliminar);
+
+            // Agregar los dos contenedores al contenedor principal
+            contenedorFila.appendChild(contenedorIzquierda);
+            contenedorFila.appendChild(contenedorDerecha);
+
+            // Agregar el contenedor principal al li
+            nuevaTarea.appendChild(contenedorFila);
 
             // Agregar la tarea a la lista
             listaTareas.appendChild(nuevaTarea);
 
-            alert("Tarea guardada correctamente")
+            alert("Tarea guardada correctamente");
 
             // Limpiar el input
             inputTarea.value = "";
 
-            // Agregar evento para eliminar tarea
-            nuevaTarea.querySelector(".eliminar-tarea").addEventListener("click", function() {
+            // Evento para eliminar tarea
+            btnEliminar.addEventListener("click", function () {
                 nuevaTarea.remove();
             });
 
-            nuevaTarea.querySelector(".editar-tarea").addEventListener("click", function() {
-                let nuevoTexto = prompt("Editar tarea:", nuevaTarea.querySelector(".texto-tarea").textContent);
+            // Evento para editar tarea
+            btnEditar.addEventListener("click", function () {
+                let nuevoTexto = prompt("Editar tarea:", contenedorIzquierda.textContent);
                 if (nuevoTexto !== null && nuevoTexto.trim() !== "") {
-                    nuevaTarea.querySelector(".texto-tarea").textContent = nuevoTexto.trim();
+                    contenedorIzquierda.textContent = nuevoTexto.trim();
                 }
             });
 
         } else {
-            alert("Complete los campos por favor")
+            alert("Complete los campos por favor");
         }
-
-        
     });
 
-    inputTarea.addEventListener("keydown", function(event){
-
+    // Permitir agregar con Enter
+    inputTarea.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
-
             event.preventDefault();
             botonAgregar.click();
         }
-    })
-
+    });
 });
